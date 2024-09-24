@@ -28,7 +28,6 @@ pip install -r requirements.txt
 ## How to Use
 
 1. **Add Your Telethon Sessions**: Place your session files in the `sessions` folder.
-Here’s a revised version of the original instruction with the additional details included:
 2. **Specify Group Information**: In the `consts.py` file, set the `GROUP_DESTINATION` (the group where members will be added) and `GROUP_TARGETS` (the groups from which members will be sourced). Specify the groups by providing the usernames. Additionally, the members of `GROUP_TARGETS` must be visible. It is also recommended that `GROUP_DESTINATION` has its members visible to retrieve them and avoid adding duplicates.
 
 ## Run
