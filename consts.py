@@ -23,7 +23,7 @@ API_HASH = "a1ab1ab12abcd123a1234567ab123456"
 # to reduce the number of operations in future executions.
 #
 # If True, members to be added will be retrieved on-demand from the target groups.
-FRESH_MODE = False
+FRESH_MODE = True
 #
 # If True, filter the members to be added
 FILTER_MODE = True
