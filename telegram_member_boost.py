@@ -4,6 +4,7 @@ import consts
 import groups_manager
 import logger_config
 import utils
+import random
 
 from telethon import TelegramClient, errors
 from telethon.tl.functions.channels import InviteToChannelRequest
@@ -162,7 +163,11 @@ async def execute(client:TelegramClient, account_information, group_information)
     
     if consts.INVITATIONS_PER_ACCOUNT > len(member_ids):
         invalid_targets = set()
-        for target in group_information['effective_targets']:
+        
+        targets = group_information['effective_targets']
+        random.shuffle(targets)
+        
+        for target in targets:
             try:
                 target_member_ids = await get_members(client, target)
             except ValueError:
