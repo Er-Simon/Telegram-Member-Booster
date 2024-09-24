@@ -65,7 +65,7 @@ python3 main.py
   The action limits in the `consts.py` file have been thoroughly tested. Modifying them could lead to errors, restrictions, or account bans.
 
 - **Utilize 8 Different Accounts**:  
-  To maximize the growth of your group, it’s recommended to use 8 different Telegram accounts simultaneously. This helps distribute the load and ensures better growth.
+  To maximize the growth of your group, it’s recommended to add at least 8 different Telegram session files in the `sessions` folder. This helps distribute the load across multiple accounts and ensures more efficient growth. 
 
 ---
 
