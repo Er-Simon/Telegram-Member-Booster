@@ -42,13 +42,7 @@ async def get_members(client:TelegramClient, group_name, filter=consts.FILTER_MO
                 continue
             
             if participant.status and hasattr(participant.status, 'was_online'):
-                try:
-                    difference_in_seconds = utils.calculate_seconds_between_datetimes(participant.status.was_online)
-                except Exception as e:
-                    from datetime import datetime as dt
-                    datetime_end = dt.now()
-                    print(participant.status.was_online, datetime_end)
-                    raise e
+                difference_in_seconds = utils.calculate_seconds_between_datetimes(participant.status.was_online)
             
                 if difference_in_seconds > consts.MEMBER_MAXIMUM_INACTIVITY_SECONDS:
                     continue                
@@ -114,7 +108,7 @@ async def add_members(client, account_information, group_information, member_ids
             group_information['total_members_added'] += 1
             group_information['successful_adds'] += 1
         
-            logger.info(f"invitation: {invitations_counter} - the user '{user_id}' was successfully invited to the group '{group_information['group_name']}'")
+            logger.info(f"invitation: {str(invitations_counter).ljust(len(str(consts.INVITATIONS_PER_ACCOUNT)))} - the user '{user_id}' was successfully invited to the group '{group_information['group_name']}'")
             
         if invitations_counter >= consts.INVITATIONS_PER_ACCOUNT:
             logger.debug("max daily invitations per account reached")

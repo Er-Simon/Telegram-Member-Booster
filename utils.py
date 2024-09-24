@@ -50,4 +50,4 @@ def calculate_seconds_between_datetimes(datetime_start, datetime_str_end=None):
     return delta.total_seconds()
 
 def get_random_floating_number(min_value, max_value):
-    return random.uniform(min_value, max_value)
+    return round(random.uniform(min_value, max_value), 2)
