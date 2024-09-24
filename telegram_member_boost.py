@@ -56,7 +56,9 @@ async def get_members(client:TelegramClient, group_name, filter=consts.FILTER_MO
 
 async def add_members(client, account_information, group_information, member_ids):
     invitations_counter = 0
+    
     member_ids = list(member_ids)
+    random.shuffle(member_ids)
     
     while member_ids != []:
         user_id = member_ids.pop()
