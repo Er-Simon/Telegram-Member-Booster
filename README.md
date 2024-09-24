@@ -51,10 +51,10 @@ python3 main.py
   You can define multiple groups from which to retrieve members.
 
 - **Fresh Mode**:  
-  Members are retrieved on-demand from the target groups during each execution, ensuring the most up-to-date members are processed.
+  Members are retrieved on-demand from the target groups during each execution, ensuring the most up-to-date members are processed. This feature is enabled by default and can be disabled via the `consts.py` file. If disabled, it uses the members obtained in previous executions for the account being used.
 
 - **Filter Mode**:  
-  Filters out members based on their characteristics (e.g., fake, bot, scam accounts) and their inactivity period.
+  Filters out members based on their characteristics (e.g., fake, bot, scam accounts) and their inactivity period. This feature is enabled by default and can be disabled via the `consts.py` file.
 
 - **Logging System**:  
   Logs all actions and operations for easier tracking and debugging.
