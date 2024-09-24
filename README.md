@@ -25,6 +25,11 @@ cd Telegram-Member-Booster
 pip install -r requirements.txt
 ```
 
+## How to Use
+
+1. **Add Your Telethon Sessions**: Place your session files in the `sessions` folder.
+2. **Specify Group Information**: In the `consts.py` file, set the `GROUP_DESTINATION` (the group where members will be added) and `GROUP_TARGETS` (the groups from which members will be sourced).
+
 ## Run
 
 To start the bot:
@@ -32,11 +37,6 @@ To start the bot:
 ```bash
 python3 main.py
 ```
-
-## How to Use
-
-1. **Add Your Telethon Sessions**: Place your session files in the `sessions` folder.
-2. **Specify Group Information**: In the `consts.py` file, set the `GROUP_DESTINATION` (the group where members will be added) and `GROUP_TARGETS` (the groups from which members will be sourced).
 
 ---
 
