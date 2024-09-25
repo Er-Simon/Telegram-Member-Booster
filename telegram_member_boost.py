@@ -109,8 +109,8 @@ async def add_members(client, account_information, group_information, member_ids
             group_information['daily_members_added_count'] += 1
             group_information['total_members_added'] += 1
             group_information['successful_adds'] += 1
-        
-            logger.info(f"invitation: {str(invitations_counter).ljust(len(str(consts.INVITATIONS_PER_ACCOUNT)))} - the user '{user_id}' was successfully invited to the group '{group_information['group_name']}'")
+                    
+            logger.info(f"invitation: {str(invitations_counter).ljust(len(str(consts.INVITATIONS_PER_ACCOUNT)))} - invited to group '{group_information['group_name']}' - user_id: '{user_id}'")
             
         if invitations_counter >= consts.INVITATIONS_PER_ACCOUNT:
             logger.debug("max daily invitations per account reached")
@@ -143,6 +143,8 @@ async def execute(client:TelegramClient, account_information, group_information)
         destination_group_members = await get_members(client, group_information['group_name'], filter=False)
     except ValueError:
         return 
+    
+    logger.info(f"obtained {len(destination_group_members)} participants from the group destination '{target}'")
     
     group_information['total_executions'] += 1
     group_information['last_execution'] = utils.get_current_datetime_str()
