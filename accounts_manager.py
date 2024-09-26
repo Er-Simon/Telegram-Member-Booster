@@ -39,6 +39,8 @@ def loads_account_information(session_name):
             'failed_invites': 0,
             'flood_wait_count': 0, 
             'last_flood_wait': None,
+            'error': None,
+            'error_message': None
         }
 
     return account_information
@@ -56,6 +58,11 @@ def get_account():
     accounts_informations = dict()
     for session_index in range(len(session_names)):
         account_information = loads_account_information(session_names[session_index])
+        
+        if account_information['error']:
+            logger.debug(f"account {session_index} '{account_information['session_name']}' cannot be used, error: {account_information['error_message']}")
+            continue
+        
         seconds_from_last_execution = utils.calculate_seconds_between_datetimes(account_information["last_execution"])
         
         if  seconds_from_last_execution > consts.ACCOUNT_REUSE_DELAY_SECONDS:

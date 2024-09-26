@@ -126,86 +126,125 @@ async def add_members(client, account_information, group_information, member_ids
         ))
         
     return account_information, group_information, member_ids
+
+async def is_authorized(client:TelegramClient, account_information):
+    is_authorized = await client.is_user_authorized()
+    
+    logger.debug(f"account {account_information['session_name']} authorization status: {is_authorized}")
+    
+    if not is_authorized:
+        logger.info(f"unauthorized account: {account_information['session_name']}")
+        
+        while True:
+            choice = input('authorize the account via phone number? [Y/n] ').strip().lower()
+            
+            if choice == 'y':
+                user_phone_numer = input("insert the user's phone number (with prefix): ")
+            
+                await client.send_code_request(user_phone_numer)
+            
+                auth_code = input("insert the received code: ")
+                
+                try:
+                    await client.sign_in(user_phone_numer, auth_code)
+                except Exception as e:
+                    logger.error(f"the account cannot be authorized, error: {e}")
+                else:
+                    is_authorized = await client.is_user_authorized()
+                
+                    if is_authorized:
+                        logger.info(f"account authorized: {account_information['session_name']}")
+                        break
+            else:
+                break
+            
+    return is_authorized
     
 async def execute(client:TelegramClient, account_information, group_information):            
     try:
         await client.connect()
     except Exception as e:
-        logger.error(f"failed to connect to the worker: {account_information['session_name']}")
+        logger.error(f"failed to connect to the account: {account_information['session_name']}")
         logger.error(f"error: {e}")
         return
     
-    account_information['total_executions'] += 1
-    account_information['last_execution'] = utils.get_current_datetime_str()
-        
-    # update destination group members
-    try:
-        destination_group_members = await get_members(client, group_information['group_name'], filter=False)
-    except ValueError:
-        return 
+    account_is_authorized = await is_authorized(client, account_information)
     
-    logger.info(f"obtained {len(destination_group_members)} participants from the group destination '{target}'")
-    
-    group_information['total_executions'] += 1
-    group_information['last_execution'] = utils.get_current_datetime_str()
-
-    group_information['data']['group_members'] = list(set(group_information['data']['group_members']) | destination_group_members)
-
-    member_ids = set()
-    if not consts.FRESH_MODE:
-        member_ids = set(group_information['data']['extracted_members'].get(account_information['session_name'], set()))
-        
-        if not member_ids == set():
-            member_ids = member_ids - set(group_information['data']['group_members'])
-            member_ids = member_ids - set(group_information['data']['members_added'])
-    
-    if consts.INVITATIONS_PER_ACCOUNT > len(member_ids):
-        invalid_targets = set()
-        
-        targets = group_information['effective_targets']
-        random.shuffle(targets)
-        
-        for target in targets:
-            try:
-                target_member_ids = await get_members(client, target)
-            except ValueError:
-                invalid_targets.add(target)
-                continue
-            
-            target_member_ids = target_member_ids - set(group_information['data']['group_members']) 
-            target_member_ids = target_member_ids - set(group_information['data']['members_added']) 
-            
-            logger.info(f"obtained {len(target_member_ids)} participants from the group '{target}' after removing of destination group members and added members")
-
-            member_ids = member_ids | target_member_ids
-            
-            if len(member_ids) >= consts.INVITATIONS_PER_ACCOUNT:
-                break
-                
-        if len(invalid_targets) > 0:
-            group_information['effective_targets'] = list(set(group_information['effective_targets']) - invalid_targets)
-        
-    
-    if len(member_ids) == 0:
-        logger.warning(f'there are no participants to invite')    
+    if not account_is_authorized:
+        account_information['error'] = True
+        account_information['error_message'] = "the account ins't authorized"
     else:
-        logger.info(f'total participants available to be added: {len(member_ids)}')    
-    
-    account_information, group_information, not_added_member_ids = await add_members(client, account_information, group_information, member_ids)  
-    
-    group_information['data']['members_added'] = list(set(group_information['data']['members_added']) | (member_ids - set(not_added_member_ids)))
-    
-    group_information['data']['extracted_members'][account_information['session_name']] = \
-        list((set(group_information['data']['extracted_members'].get(account_information['session_name'], set())) | set(not_added_member_ids)) - \
-            (set(group_information['data']['group_members']) | set(group_information['data']['members_added'])))
-    
+        account_information['total_executions'] += 1
+        account_information['last_execution'] = utils.get_current_datetime_str()
+            
+        # update destination group members
+        try:
+            destination_group_members = await get_members(client, group_information['group_name'], filter=False)
+        except ValueError:
+            return 
+        
+        logger.info(f"obtained {len(destination_group_members)} participants from the group destination '{group_information['group_name']}'")
+        
+        group_information['total_executions'] += 1
+        group_information['last_execution'] = utils.get_current_datetime_str()
+
+        group_information['data']['group_members'] = list(set(group_information['data']['group_members']) | destination_group_members)
+
+        member_ids = set()
+        if not consts.FRESH_MODE:
+            member_ids = set(group_information['data']['extracted_members'].get(account_information['session_name'], set()))
+            
+            if not member_ids == set():
+                member_ids = member_ids - set(group_information['data']['group_members'])
+                member_ids = member_ids - set(group_information['data']['members_added'])
+        
+        if consts.INVITATIONS_PER_ACCOUNT > len(member_ids):
+            invalid_targets = set()
+            
+            targets = group_information['effective_targets']
+            random.shuffle(targets)
+            
+            for target in targets:
+                try:
+                    target_member_ids = await get_members(client, target)
+                except ValueError:
+                    invalid_targets.add(target)
+                    continue
+                
+                target_member_ids = target_member_ids - set(group_information['data']['group_members']) 
+                target_member_ids = target_member_ids - set(group_information['data']['members_added']) 
+                
+                logger.info(f"obtained {len(target_member_ids)} participants from the group '{target}' after removing of destination group members and added members")
+
+                member_ids = member_ids | target_member_ids
+                
+                if len(member_ids) >= consts.INVITATIONS_PER_ACCOUNT:
+                    break
+                    
+            if len(invalid_targets) > 0:
+                group_information['effective_targets'] = list(set(group_information['effective_targets']) - invalid_targets)
+            
+        
+        if len(member_ids) == 0:
+            logger.warning(f'there are no participants to invite')    
+        else:
+            logger.info(f'total participants available to be added: {len(member_ids)}')    
+        
+        account_information, group_information, not_added_member_ids = await add_members(client, account_information, group_information, member_ids)  
+        
+        group_information['data']['members_added'] = list(set(group_information['data']['members_added']) | (member_ids - set(not_added_member_ids)))
+        
+        group_information['data']['extracted_members'][account_information['session_name']] = \
+            list((set(group_information['data']['extracted_members'].get(account_information['session_name'], set())) | set(not_added_member_ids)) - \
+                (set(group_information['data']['group_members']) | set(group_information['data']['members_added'])))
+        
     accounts_manager.dumps_account_information(account_information)
     groups_manager.dumps_group_information(group_information)
     
     try:
         await client.disconnect()
     except Exception as e:
-        logger.warning(f"failed to disconnect to the worker: {account_information['session_name']}")
+        logger.warning(f"failed to disconnect to the account: {account_information['session_name']}")
         logger.warning(f"error: {e}")
     
     return account_information
