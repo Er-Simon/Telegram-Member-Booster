@@ -68,6 +68,9 @@ python3 main.py
 - **Don't Use Fresh Sessions**
   Using newly created sessions results in significant limitations, which can lead to peer flood errors after just a few invitations. A good session should be at least one month old. In the case of fresh sessions, set the maximum number of invitations to 20 per account.
 
+- **Un-hide Destination Group Members**
+  For an initial period, it is recommended to ensure that the members of the destination group are visible. This allows you to gather member data and avoid sending invitations to users who are already part of the target group.
+
 - **Do Not Change Action Limits in `consts.py`**:  
   The action limits in the `consts.py` file have been thoroughly tested. Modifying them could lead to errors, restrictions, or account bans.
 
