@@ -32,6 +32,8 @@ def loads_account_information(session_name):
     if not account_information:
         account_information = {
             'session_name': session_name,
+            'name': None,
+            'username': None,
             'total_executions': 0,  
             'last_execution': utils.get_epoch_timestamp(), 
             'total_invites_sent': 0,
