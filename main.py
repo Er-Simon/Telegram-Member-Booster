@@ -31,11 +31,18 @@ if __name__ == '__main__':
 
         logger.info(f"destination group '{group_information['group_name']}'")
 
-        account_information_updated = telegram_member_boost.start(account_information, group_information)
+        response = telegram_member_boost.start(account_information, group_information)
         
-        if account_information_updated:
-            logger.info(f"account information updated:\n{json.dumps(account_information_updated, indent=2)}\n")
-        else:
+        if not response:
+            continue
+        
+        account_information_updated, stop_execution = response
+        
+        logger.info(f"account information updated:\n{json.dumps(account_information_updated, indent=2)}\n")
+        
+        if stop_execution:
+            logger.warning(f"during the execution of the last account, an error occurred. It is recommended to review the issue before reactivating it.")
+            logger.warning(f"if this issue is not an isolated case, it is recommended to modify the values of INVITATIONS_PER_ACCOUNT or MAX_DAILY_INVITATIONS_PER_DESTINATION_GROUP in the consts.py file.")
             break
         
         pause_time = utils.get_random_floating_number(

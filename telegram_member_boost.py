@@ -55,6 +55,7 @@ async def get_members(client:TelegramClient, group_name, filter=consts.FILTER_MO
     return user_ids
 
 async def add_members(client, account_information, group_information, member_ids):
+    stop_execution = False
     invitations_counter = 0
     
     member_ids = list(member_ids)
@@ -74,13 +75,15 @@ async def add_members(client, account_information, group_information, member_ids
             ))
         except Exception as e:
             account_information['failed_invites'] += 1
-            
+
             group_information['failed_adds'] += 1
             
             logger.info(f"invitation: {invitations_counter} - the user '{user_id}' cannot be invite to the group '{group_information['group_name']}'")
             logger.info(f"error: {e}")
             
             if isinstance(e, errors.PeerFloodError):
+                stop_execution = True
+                
                 logger.error("the account has received a Peer Flood Error, which means it has been flagged several times and is now restricted. \
                     if you want to check if your account has been limited, simply send a private message to @SpamBot through Telegram itself.")
                 
@@ -91,6 +94,8 @@ async def add_members(client, account_information, group_information, member_ids
                 break
             
             if isinstance(e, errors.FloodWaitError):
+                stop_execution = True
+                
                 now = utils.get_current_datetime_str()
                 
                 account_information['flood_wait_count'] += 1
@@ -125,7 +130,7 @@ async def add_members(client, account_information, group_information, member_ids
             consts.MAX_INVITATION_PAUSE_SECONDS
         ))
         
-    return account_information, group_information, member_ids
+    return account_information, group_information, member_ids, stop_execution
 
 async def is_authorized(client:TelegramClient, account_information):
     is_authorized = await client.is_user_authorized()
@@ -160,13 +165,16 @@ async def is_authorized(client:TelegramClient, account_information):
             
     return is_authorized
     
-async def execute(client:TelegramClient, account_information, group_information):            
+async def execute(client:TelegramClient, account_information, group_information):  
+            
     try:
         await client.connect()
     except Exception as e:
         logger.error(f"failed to connect to the account: {account_information['session_name']}")
         logger.error(f"error: {e}")
         return
+    
+    stop_execution = False
     
     account_is_authorized = await is_authorized(client, account_information)
     
@@ -235,7 +243,7 @@ async def execute(client:TelegramClient, account_information, group_information)
         else:
             logger.info(f'total participants available to be added: {len(member_ids)}')    
         
-        account_information, group_information, not_added_member_ids = await add_members(client, account_information, group_information, member_ids)  
+        account_information, group_information, not_added_member_ids, stop_execution = await add_members(client, account_information, group_information, member_ids)  
         
         group_information['data']['members_added'] = list(set(group_information['data']['members_added']) | (member_ids - set(not_added_member_ids)))
         
@@ -252,9 +260,9 @@ async def execute(client:TelegramClient, account_information, group_information)
         logger.warning(f"failed to disconnect to the account: {account_information['session_name']}")
         logger.warning(f"error: {e}")
     
-    return account_information
+    return account_information, stop_execution
     
 def start(account_information, group_information):
     client = create_client(account_information)
-    account_information = client.loop.run_until_complete(execute(client, account_information, group_information))
-    return account_information
+    response = client.loop.run_until_complete(execute(client, account_information, group_information))
+    return response
