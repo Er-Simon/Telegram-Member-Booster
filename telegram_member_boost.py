@@ -183,8 +183,8 @@ async def execute(client:TelegramClient, account_information, group_information)
         account_information['error_message'] = "the account ins't authorized"
     else:
         telegram_user_info = await client.get_me()
-        
-        account_information['name'] = f"{telegram_user_info.first_name} {telegram_user_info.last_name}".strip()
+                
+        account_information['name'] = " ".join([name.strip() for name in [telegram_user_info.first_name, telegram_user_info.last_name] if name])
         account_information['username'] = telegram_user_info.username
         
         account_information['total_executions'] += 1
