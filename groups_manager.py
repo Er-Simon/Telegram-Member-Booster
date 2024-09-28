@@ -65,10 +65,10 @@ def check_and_update_group_information(group_information):
         group_information['last_execution_day'] = current_day
         group_information['daily_members_added_count'] = 0
         
-    elif group_information['daily_members_added_count'] >= consts.MAX_DAILY_INVITATIONS_PER_DESTINATION_GROUP:
-        group_information = None
-        
+    elif group_information['daily_members_added_count'] >= consts.MAX_DAILY_INVITATIONS_PER_DESTINATION_GROUP:        
         logger.info(f"group '{group_information['group_name']}' reached the maximum number of daily invitations")
+        
+        group_information = None
     
     return group_information
         
