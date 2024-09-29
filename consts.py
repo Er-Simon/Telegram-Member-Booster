@@ -4,17 +4,17 @@
 # @username
 # t.me/username
 # https://telegram.dog/username
-GROUP_DESTINATION = "username1"
+GROUP_DESTINATION = "bullybuy_it"
 
 # Target groups: specify the groups from which to retrieve members
 GROUP_TARGETS = [
-    "username2",
-    "username3",
+    "eFOOTBALL_Italia",
+    "TavernaLoLGroup",
 ]
 
 # Telegram API credentials (optional if sessions are already active)
-API_ID = "1234567"
-API_HASH = "a1ab1ab12abcd123a1234567ab123456"
+API_ID = "611335"
+API_HASH = "d524b414d21f4d37f08684c1df41ac9c"
 
 # Operation modes
 #
@@ -40,7 +40,7 @@ INVITATIONS_PER_ACCOUNT = 35
 ACCOUNT_REUSE_DELAY_SECONDS = 172800  # 48 hours
 #
 # Maximum daily invitations that can be sent to a specific group
-MAX_DAILY_INVITATIONS_PER_DESTINATION_GROUP = 140
+MAX_DAILY_INVITATIONS_PER_DESTINATION_GROUP = 70
 #
 # Pause interval between executions in seconds
 MIN_EXECUTION_PAUSE_SECONDS = 1600
