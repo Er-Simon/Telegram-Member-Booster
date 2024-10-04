@@ -5,7 +5,7 @@ on: [push]
 
 jobs:
   deploy:
-    runs-on: [self-hosted, linux, x86_64]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
