@@ -108,3 +108,6 @@ venv.bak/
 *.session
 *.session-journal
 create_session.py
+
+secrets.env
+update_secrets.sh
