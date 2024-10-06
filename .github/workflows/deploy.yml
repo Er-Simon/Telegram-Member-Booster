@@ -15,44 +15,39 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
+          username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
+          
           script: |            
 
             REPO_NAME="${{ secrets.REPO_NAME }}"
             USERNAME="${{ secrets.USERNAME }}"
 
-            REPO_URL="https://github.com/$USERNAME/$REPO_NAME.git"
+            REPO_URL="git@github.com:$USERNAME/$REPO_NAME.git"
 
-            # Se la directory $REPO_NAME non esiste, clona il repository
             if [ ! -d "$REPO_NAME" ]; then
               git clone "$REPO_URL" "$REPO_NAME"
             fi
 
-            # Accedi alla directory del progetto
             cd "$REPO_NAME"
 
-            # Creazione dell'ambiente virtuale specifico per il progetto
             if [ ! -d "venv_$REPO_NAME" ]; then
               python3 -m venv "venv_$REPO_NAME"
             fi
 
-            # Ferma il processo Python associato al progetto (se presente)
-            if [ -f "$REPO_NAME.pid" ]; then
-              kill -9 $(cat "$REPO_NAME.pid") || echo "No process found"
-              rm "$REPO_NAME.pid"
-            fi
+            #if [ -f "$REPO_NAME.pid" ]; then
+            #  kill -9 $(cat "$REPO_NAME.pid") || echo "No process found"
+            #  rm "$REPO_NAME.pid"
+            #fi
 
-            # Aggiorna la repository
             git pull origin main
 
-            # Attiva l'ambiente virtuale del progetto
             source "venv_$REPO_NAME/bin/activate"
 
-            # Installa le nuove dipendenze
             pip install --upgrade pip
             pip install -r requirements.txt
 
-            # Riavvia il processo Python e registra il PID
-            nohup python main.py > output.log 2>&1 & echo $! > "$REPO_NAME.pid"
+            #nohup python main.py > output.log 2>&1 & echo $! > "$REPO_NAME.pid"
+
+            nohup python main.py > output.log 2>&1
