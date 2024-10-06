@@ -1,0 +1,13 @@
+[Unit]
+Description=Telegram-Member-Booster Service
+After=network.target
+
+[Service]
+User=your_linux_username
+WorkingDirectory=/home/ersa/Telegram-Member-Booster
+ExecStart=/bin/bash -c 'source venv_Telegram-Member-Booster/bin/activate && nohup python main.py > /dev/null 2>&1 &'
+#Restart=always
+#RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
