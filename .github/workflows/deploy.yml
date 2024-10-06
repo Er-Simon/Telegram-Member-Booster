@@ -49,5 +49,3 @@ jobs:
             pip install -r requirements.txt
 
             #nohup python main.py > output.log 2>&1 & echo $! > "$REPO_NAME.pid"
-
-            nohup python main.py > output.log 2>&1
