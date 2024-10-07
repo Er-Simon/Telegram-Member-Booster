@@ -58,7 +58,7 @@ PEER_FLOOD_ERROR_PAUSE_DAYS = 7
 # Examples:
 # '%Y-%m-%d %H:%M:%S' -> '2023-09-20 15:30:45'
 # '%d/%m/%Y %I:%M %p' -> '20/09/2023 03:30 PM'
-DATETIME_FORMAT = '%d-%m-%Y %H:%M:%S'
+DATETIME_FORMAT = '%d-%m-%Y_%H-%M-%S'
 #
 # Date format
 DATE_FORMAT = '%d-%m-%Y'
