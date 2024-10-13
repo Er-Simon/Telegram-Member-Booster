@@ -111,11 +111,13 @@ async def add_members(client, account_information, group_information, member_ids
         else:
             account_information['successful_invites'] += 1
             
-            group_information['daily_members_added_count'] += 1
             group_information['total_members_added'] += 1
             group_information['successful_adds'] += 1
                     
             logger.info(f"invitation: {str(invitations_counter).ljust(len(str(consts.INVITATIONS_PER_ACCOUNT)))} - invited to group '{group_information['group_name']}' - user_id: '{user_id}'")
+        
+        finally:
+            group_information['daily_members_added_count'] += 1
             
         if invitations_counter >= consts.INVITATIONS_PER_ACCOUNT:
             logger.debug("max daily invitations per account reached")
