@@ -4,17 +4,17 @@
 # @username
 # t.me/username
 # https://telegram.dog/username
-GROUP_DESTINATION = "bullybuy_it"
+GROUP_DESTINATION = "group_username"
 
 # Target groups: specify the groups from which to retrieve members
 GROUP_TARGETS = [
-    "eFOOTBALL_Italia",
-    "TavernaLoLGroup",
+    "group_target_username_1",
+    "group_target_username_2",
 ]
 
 # Telegram API credentials (optional if sessions are already active)
-API_ID = "611335"
-API_HASH = "d524b414d21f4d37f08684c1df41ac9c"
+API_ID = "712345"
+API_HASH = "d534b414d22g4d37f26804c1df41ac9c"
 
 # Operation modes
 #
