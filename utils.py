@@ -38,7 +38,7 @@ def parse_str_to_datetime(string):
 def calculate_seconds_between_datetimes(datetime_start, datetime_str_end=None):
     if not isinstance(datetime_start, datetime):
         datetime_start = datetime.strptime(datetime_start, consts.DATETIME_FORMAT)
-        datetime_start = datetime_start.astimezone(consts.TZ_INFO)
+        datetime_start = datetime_start.astimezone()
     
     if datetime_str_end:
         datetime_end = datetime.strptime(datetime_str_end, consts.DATETIME_FORMAT)
