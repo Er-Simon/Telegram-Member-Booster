@@ -107,7 +107,7 @@ venv.bak/
 *.json
 *.session
 *.session-journal
-create_session.py
 
+consts.py
 secrets.env
 update_secrets.sh
