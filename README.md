@@ -25,19 +25,35 @@ cd Telegram-Member-Booster
 pip install -r requirements.txt
 ```
 
-## How to Use
+---
 
-1. **Add Your Telethon Sessions**: Place your session files in the `sessions` folder.
-2. **Specify Group Information**: In the `consts.py` file, set the `GROUP_DESTINATION` (the group where members will be added) and `GROUP_TARGETS` (the groups from which members will be sourced). Specify the groups by providing the usernames. Additionally, the members of `GROUP_TARGETS` must be visible. It is also recommended that `GROUP_DESTINATION` has its members visible to retrieve them and avoid adding duplicates.
+## How to Use  
 
-## Run
+1. **Add Your Telethon Sessions**:  
+   - You can either place your existing session files in the `sessions` folder.  
+   - Or create new session files using the `create_session.py` script:  
+     - If you plan to use the script, make sure to specify the following in the `consts.py` file:  
+       - **`API_ID`**: Your API ID, obtainable from [my.telegram.org](https://my.telegram.org/auth).  
+       - **`API_HASH`**: Your API Hash, also obtainable from [my.telegram.org](https://my.telegram.org/auth).  
+     - Run the following command:  
+       ```bash
+       python3 create_session.py
+       ```  
+     - Provide the Telegram account phone_number when prompted.  
+     - The script will automatically generate and save the session file in the `sessions` folder.  
 
-To start the bot:
+2. **Specify Group Information**:  
+   In the `consts.py` file, set the following:  
+   - **`GROUP_DESTINATION`**: The group where members will be added (provide the group username).  
+   - **`GROUP_TARGETS`**: The groups from which members will be sourced (provide the group usernames).  
+     - Ensure that the members of `GROUP_TARGETS` are visible.  
+     - It's recommended that `GROUP_DESTINATION` has visible members to avoid adding duplicates.  
 
-```bash
-python3 main.py
-```
-
+3. **Run the Bot**:  
+   To start the bot, run:  
+   ```bash
+   python3 main.py
+   ```  
 ---
 
 ## Supported Features
