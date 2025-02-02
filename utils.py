@@ -24,8 +24,8 @@ def get_current_datetime_str():
 def get_current_day_str():
     return datetime.now(consts.TZ_INFO).strftime(consts.DATE_FORMAT)
 
-def get_epoch_timestamp():
-    epoch_time = datetime.fromtimestamp(0, timezone.utc)
+def get_millennium_datetime_str():
+    epoch_time = datetime.fromtimestamp(946684800, timezone.utc)
     return epoch_time.strftime(consts.DATETIME_FORMAT)
 
 def get_future_datetime_str(days_to_add):
@@ -38,7 +38,7 @@ def parse_str_to_datetime(string):
 def calculate_seconds_between_datetimes(datetime_start, datetime_str_end=None):
     if not isinstance(datetime_start, datetime):
         datetime_start = datetime.strptime(datetime_start, consts.DATETIME_FORMAT)
-        datetime_start = datetime_start.astimezone()
+        datetime_start = datetime_start.astimezone(consts.TZ_INFO)
     
     if datetime_str_end:
         datetime_end = datetime.strptime(datetime_str_end, consts.DATETIME_FORMAT)

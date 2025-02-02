@@ -35,7 +35,7 @@ def loads_account_information(session_name):
             'name': None,
             'username': None,
             'total_executions': 0,  
-            'last_execution': utils.get_epoch_timestamp(), 
+            'last_execution': utils.get_millennium_datetime_str(), 
             'total_invites_sent': 0,
             'successful_invites': 0,
             'failed_invites': 0,
